@@ -113,8 +113,14 @@ function [J grad] = nnCostFunction(nn_params, ...
 
     end
 
-    Theta1_grad = Delta1/m;
-    Theta2_grad = Delta2/m; 
+    Reg_Theta1 = Theta1 * lambda / m;
+    Reg_Theta1(:,1) = 0;
+
+    Reg_Theta2 = Theta2 * lambda / m;
+    Reg_Theta2(:,1) = 0;
+
+    Theta1_grad = Delta1/m + Reg_Theta1;
+    Theta2_grad = Delta2/m + Reg_Theta2; 
 
     % -------------------------------------------------------------
 
