@@ -94,7 +94,7 @@ function [J grad] = nnCostFunction(nn_params, ...
     Delta1 = zeros(size(Theta1));
     Delta2 = zeros(size(Theta2));
 
-    for t = 1:2
+    for t = 1:m
         a1 = X(t,:)';
         a1 = [1; a1];    % add bias unit
         z2 = Theta1 * a1;
