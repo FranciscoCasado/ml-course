@@ -62,9 +62,10 @@ function [J grad] = nnCostFunction(nn_params, ...
     %               and Theta2_grad from Part 2.
     %
 
-    a1 = X;
-    a1 = [ones(m, 1) a1]; % add bias unit
-    z2 = Theta1 * a1';
+    % Part 1
+    a1 = X';
+    a1 = [ones(1, m); a1]; % add bias unit
+    z2 = Theta1 * a1;
     a2 = sigmoid(z2);
     a2 = [ones(1, m); a2]; % add bias unit
     z3 = Theta2 * a2;
@@ -87,7 +88,33 @@ function [J grad] = nnCostFunction(nn_params, ...
         + sum(sum(Theta2(:, 2:end).^2));
     J = (J + lambda / 2 * reg ) / m;
 
-    
+
+    % Part 2: BackProp
+
+    Delta1 = zeros(size(Theta1));
+    Delta2 = zeros(size(Theta2));
+
+    for t = 1:2
+        a1 = X(t,:)';
+        a1 = [1; a1];    % add bias unit
+        z2 = Theta1 * a1;
+        a2 = sigmoid(z2);
+        a2 = [1; a2]; % add bias unit
+        z3 = Theta2 * a2;
+        a3 = sigmoid(z3);
+
+        d3 = a3 - Y(:,t);
+        d2 = (Theta2' * d3) .* sigmoidGradient([1; z2]);
+
+
+        Delta2 = Delta2 + d3 * a2';
+
+        Delta1 = Delta1 + d2(2:end) * a1';
+
+    end
+
+    Theta1_grad = Delta1/m;
+    Theta2_grad = Delta2/m; 
 
     % -------------------------------------------------------------
 
